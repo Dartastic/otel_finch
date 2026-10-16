@@ -1,13 +1,13 @@
-// Licensed under the Dartastic Pro Software License Agreement.
+// Licensed under the MIT License.
 // Copyright 2025-2026 Mindful Software LLC d/b/a Dartastic.io, All rights reserved.
 
-import 'package:dartastic_opentelemetry/dartastic_opentelemetry.dart';
+import 'package:dartastic_opentelemetry_api/dartastic_opentelemetry_api.dart';
 
 import 'otel_finch_suppression.dart';
 
 const _tracerName = 'dartastic_otel_libs_finch';
 
-Tracer _tracer() => OTel.tracerProvider().getTracer(_tracerName);
+APITracer _tracer() => OTelAPI.tracerProvider().getTracer(_tracerName);
 
 class FinchResult {
   const FinchResult({
@@ -87,32 +87,32 @@ Future<T> tracedFinch<T>({
   final span = _tracer().startSpan(
     'finch $operation',
     kind: SpanKind.client,
-    attributes: OTel.attributesFromMap(m),
+    attributes: OTelAPI.attributesFromMap(m),
   );
   try {
     final r = await invoke();
     if (r.result != null) {
       final extras = <Attribute<Object>>[];
       if (r.result!.itemCount != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'finch.item_count',
           r.result!.itemCount!,
         ));
       }
       if (r.result!.providerId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'finch.provider.id',
           r.result!.providerId!,
         ));
       }
       if (r.result!.authMethod != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'finch.auth.method',
           r.result!.authMethod!,
         ));
       }
       if (r.result!.connectionStatus != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'finch.connection.status',
           r.result!.connectionStatus!,
         ));
@@ -125,37 +125,37 @@ Future<T> tracedFinch<T>({
         }
       }
       if (r.result!.productCategory != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'finch.product',
           r.result!.productCategory!,
         ));
       }
       if (r.result!.batchSize != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'finch.batch_size',
           r.result!.batchSize!,
         ));
       }
       if (r.result!.employmentStatus != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'finch.employment.status',
           r.result!.employmentStatus!,
         ));
       }
       if (r.result!.dataSyncedAt != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'finch.data_synced_at',
           r.result!.dataSyncedAt!,
         ));
       }
       if (r.result!.requestId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'finch.request.id',
           r.result!.requestId!,
         ));
       }
       if (r.result!.statusCode != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'http.response.status_code',
           r.result!.statusCode!,
         ));
@@ -166,13 +166,13 @@ Future<T> tracedFinch<T>({
           );
         }
       }
-      if (extras.isNotEmpty) span.addAttributes(OTel.attributes(extras));
+      if (extras.isNotEmpty) span.addAttributes(OTelAPI.attributes(extras));
     }
     return r.value;
   } catch (e, st) {
-    span.addAttributes(OTel.attributes([
-      OTel.attributeString(
-        ErrorResource.errorType.key,
+    span.addAttributes(OTelAPI.attributes([
+      OTelAPI.attributeString(
+        ErrorAttributes.errorType.key,
         e.runtimeType.toString(),
       ),
     ]));
