@@ -10,6 +10,7 @@ const _tracerName = 'dartastic_otel_libs_finch';
 APITracer _tracer() => OTelAPI.tracerProvider().getTracer(_tracerName);
 
 class FinchResult {
+  /// Creates a result.
   const FinchResult({
     this.itemCount,
     this.providerId,
@@ -57,8 +58,13 @@ class FinchResult {
   final int? statusCode;
 }
 
+/// What a traced call returned: the value for the caller plus fields
+/// recorded on the span.
 class FinchCallResult<T> {
+  /// Creates a call result.
   const FinchCallResult({required this.value, this.result});
+
+  /// The value returned to the caller.
   final T value;
   final FinchResult? result;
 }
